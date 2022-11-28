@@ -1,0 +1,16 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+}
