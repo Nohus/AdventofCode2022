@@ -36,12 +36,34 @@ fun printInput(input: String) {
     }
 }
 
-@OptIn(ExperimentalTime::class)
-fun solve(additionalTiming: Boolean = false, solve: (List<String>) -> Any?) {
-    val input = getInput()
+fun solveRaw(
+    additionalTiming: Boolean = false,
+    trim: Boolean = true,
+    solve: (String) -> Any?
+) {
+    val input = getInput().let { if (trim) it.trim() else it }
     printInput(input)
+    solveRaw(input, additionalTiming, solve)
+}
+
+fun solve(
+    additionalTiming: Boolean = false,
+    trim: Boolean = true,
+    solve: (List<String>) -> Any?
+) {
+    val input = getInput().let { if (trim) it.trim() else it }
+    printInput(input)
+    solveRaw(input.lines(), additionalTiming, solve)
+}
+
+@OptIn(ExperimentalTime::class)
+private fun <T> solveRaw(
+    input: T,
+    additionalTiming: Boolean = false,
+    solve: (T) -> Any?
+) {
     val (answer, duration) = measureTimedValue {
-        solve(input.lines()).toString()
+        solve(input).toString()
     }
     val time = "${String.format("%.3f", duration.inWholeMicroseconds / 1000.0)}ms"
     if (answer != "kotlin.Unit") {
@@ -56,7 +78,7 @@ fun solve(additionalTiming: Boolean = false, solve: (List<String>) -> Any?) {
         println("Rerunning for timing")
         val count = if (duration < 100.milliseconds) 1000 else 10
         val fastest = List(count) {
-            measureTime { solve(input.lines()) }
+            measureTime { solve(input) }
         }.minOrNull()!!
         println("Fastest time: [${String.format("%.3f", fastest.inWholeMicroseconds / 1000.0)}ms]")
     }
