@@ -18,7 +18,7 @@ private fun getInputFile(): File {
 }
 
 private fun getInput(): String {
-    return getInputFile().readText().trim()
+    return getInputFile().readText()
 }
 
 fun printInput(input: String) {
@@ -76,7 +76,7 @@ private fun <T> solveRaw(
 
     if (additionalTiming) {
         println("Rerunning for timing")
-        val count = if (duration < 100.milliseconds) 1000 else 10
+        val count = if (duration < 100.milliseconds) 1000 else 25
         val fastest = List(count) {
             measureTime { solve(input) }
         }.minOrNull()!!

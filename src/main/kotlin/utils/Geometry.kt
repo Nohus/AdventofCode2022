@@ -2,10 +2,7 @@ package utils
 
 import utils.Direction.*
 import utils.Turn.*
-import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 data class Point(val x: Int, val y: Int) {
 
@@ -39,9 +36,9 @@ data class Point(val x: Int, val y: Int) {
         Direction8.NORTH_WEST -> Point(x - distance, y - distance)
     }
 
-    fun manhattanDistanceTo(other: Point) = abs(x - other.x) + abs(y - other.y)
+    fun manhattan(other: Point) = abs(x - other.x) + abs(y - other.y)
 
-    fun straightDistanceTo(other: Point) = sqrt((x - other.x).toDouble().pow(2) + (y - other.y).toDouble().pow(2))
+    fun distance(other: Point) = sqrt((x - other.x).toDouble().pow(2) + (y - other.y).toDouble().pow(2))
 
     fun getAdjacentSides(): List<Point> = listOf(
         Point(x, y - 1), Point(x - 1, y), Point(x + 1, y), Point(x, y + 1),
@@ -53,7 +50,7 @@ data class Point(val x: Int, val y: Int) {
         Point(x - 1, y + 1), Point(x, y + 1), Point(x + 1, y + 1),
     )
 
-    fun isAdjacentSide(other: Point) = manhattanDistanceTo(other) == 1
+    fun isAdjacentSide(other: Point) = manhattan(other) == 1
 
     fun angleTo(other: Point): Double {
         val angle = Math.toDegrees(atan2((other.y - y).toDouble(), (other.x - x).toDouble())) + 90
@@ -114,6 +111,20 @@ data class Vector3(val x: Int, val y: Int, val z: Int) {
             for (y in -1..1) {
                 for (z in -1..1) {
                     if (x == 0 && y == 0 && z == 0) continue
+                    adjacent += (Vector3(x, y, z) + this)
+                }
+            }
+        }
+        return adjacent
+    }
+
+    fun getAdjacentSides(): List<Vector3> {
+        val adjacent = mutableListOf<Vector3>()
+        for (x in -1..1) {
+            for (y in -1..1) {
+                for (z in -1..1) {
+                    if (x == 0 && y == 0 && z == 0) continue
+                    if (x.absoluteValue + y.absoluteValue + z.absoluteValue > 1) continue
                     adjacent += (Vector3(x, y, z) + this)
                 }
             }
